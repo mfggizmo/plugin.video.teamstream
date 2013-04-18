@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+	<string id="30000">Teamstream.to</string>
+
+    <!-- Category strings -->
+    <string id="30100">Credentials</string>
+        <string id="30110">Login</string>
+        <string id="30111">Password</string>
+	<string id="30200">Settings</string>
+		<string id="30210">Show EPG-Data</string>
+</strings>

@@ -1,0 +1,360 @@
+<xml>
+	<channel name="Sky Streams" image="sky_streams.png">
+		<item>
+			<title>Sky Sport HD1</title>
+			<epg>Sky Sport HD 1</epg>
+			<file>pappkamerad1hd</file>
+			<image>01.png</image>
+		</item>
+		<item>
+			<title>Sky Sport HD2</title>
+			<epg>Sky Sport HD 2</epg>
+			<file>pappkamerad2hd</file>
+			<image>02.png</image>
+		</item>
+		<item>
+			<title>Sky Sport HD EXTRA</title>
+			<epg>Sky Sport HD Extra</epg>
+			<file>pappkamerad3hd</file>
+			<image>03.png</image>
+		</item>
+
+		<item>
+			<title>History HD</title>
+			<epg>History HD</epg>
+			<file>pappkamerad4hd</file>
+			<image>04.png</image>
+		 </item>
+
+		<item>
+			<title>Discovery HD</title>
+			<epg>Discovery HD</epg>
+			<file>pappkamerad5hd</file>
+			<image>05.png</image>
+		 </item>
+
+		<item>
+			<title>Nat Geo HD</title>
+			<epg>National Geographic Channel HD</epg>
+			<file>pappkamerad6hd</file>
+			<image>06.png</image>
+		</item>
+
+		<item>
+			<title>Sky Cinema HD</title>
+			<epg>Sky Cinema HD</epg>
+			<file>pappkamerad7hd</file>
+			<image>07.png</image>
+		</item>
+
+		<item>
+			<title>ESPN America HD</title>
+			<epg>ESPN America HD</epg>
+			<file>pappkamerad8hd</file>
+			<image>08.png</image>
+		</item>
+
+		<item>
+			<title>Sky Cinema +24</title>
+			<epg>Sky Cinema +24</epg>
+			<file>pappkamerad9hd</file>
+			<image>09.png</image>
+		</item>
+
+		<item>
+			<title>Sky Action HD</title>
+			<epg>Sky Action HD</epg>
+			<file>streamer9hd</file>
+			<image>10.png</image>
+		 </item>
+
+		<item>
+			<title>Sky 3D</title>
+			<epg>Sky 3D</epg>
+			<file>streamer10</file>
+			<image>11.png</image>
+		 </item>
+
+		<item>
+			<title>Sportdigital</title>
+			<epg>sportdigital</epg>
+			<file>peppi1hd</file>
+			<image>12.png</image>
+		</item>
+
+		<item>
+			<title>Sky Atlantic HD</title>
+			<epg>Sky Atlantic HD</epg>
+			<file>peppi2hd</file>
+			<image>13.png</image>
+		</item>
+
+		<item>
+			<title>Sky Hits HD</title>
+			<epg>Sky Hits HD</epg>
+			<file>peppi3hd</file>
+			<image>14.png</image>
+		</item>
+
+		<item>
+			<title>Sky Syfy</title>
+			<epg>Syfy</epg>
+			<file>peppi4hd</file>
+			<image>16.png</image>
+		</item>
+		<item>
+			<title>Nat Geo Wild</title>
+			<epg>Nat Geo Wild</epg>
+			<file>peppi5hd</file>
+			<image>16.png</image>
+		</item>
+		<item>
+			<title>FOX HD</title>
+			<epg>FOX HD</epg>
+			<file>peppi6hd</file>
+			<image>17.png</image>
+		</item>
+		<item>
+			<title>TNT Serie HD</title>
+			<epg>TNT Serie HD</epg>
+			<file>peppi7hd</file>
+			<image>18.png</image>
+		</item>
+		<item>
+			<title>13th Street HD</title>
+			<epg>13TH STREET Universal HD</epg>
+			<file>peppi8hd</file>
+			<image>19.png</image>
+		</item>
+		<item>
+			<title>Sport 1+ HD</title>
+			<epg>SPORT1+ HD</epg>
+			<file>peppi9hd</file>
+			<image>20.png</image>
+		</item>
+		<item>
+			<title>Sky Comedy</title>
+			<epg>Sky Comedy</epg>
+			<file>nike</file>
+			<image>21.png</image>
+		</item>
+		<item>
+			<title>Sky Sport News HD</title>
+			<epg>Sky Sport News HD</epg>
+			<file>f12012hd</file>
+			<image>22.png</image>
+		</item>
+		<item>
+			<title>Disney Channel</title>
+			<epg>Disney Channel</epg>
+			<file>prime1</file>
+			<image>23.png</image>
+		</item>
+		<item>
+			<title>Pro7 HD</title>
+			<epg>ProSieben</epg>
+			<file>nike2</file>
+			<image>pro7.png</image>
+		</item>
+	</channel>
+	<channel name="Free TV Streams" image="free_tv_streams.png">
+		<item>
+			<title>ARD</title>
+			<epg>Das Erste</epg>
+			<file>ard</file>
+			<image>ard.png</image>
+		</item>
+		<item>
+			<title>ZDF</title>
+			<epg>ZDF</epg>
+			<file>zdf</file>
+			<image>zdf.png</image>
+		</item>
+		<item>
+			<title>MDR</title>
+			<epg>MDR</epg>
+			<file>mdr</file>
+			<image>mdr.png</image>
+		</item>
+		<item>
+			<title>RTL</title>
+			<epg>RTL</epg>
+			<file>rtl</file>
+			<image>rtl.png</image>
+		</item>
+		<item>
+			<title>SAT.1</title>
+			<epg>Sat.1</epg>
+			<file>sat.1ch</file>
+			<image>sat1.png</image>
+		</item>
+		<item>
+			<title>PRO 7</title>
+			<epg>ProSieben</epg>
+			<file>pro7</file>
+			<image>pro7.png</image>
+		</item>
+		<item>
+			<title>Kabel 1</title>
+			<epg>kabel eins</epg>
+			<file>kabel1</file>
+			<image>kabel_1.png</image>
+		</item>
+		<item>
+			<title>RTL 2</title>
+			<epg>RTL II</epg>
+			<file>rtl2</file>
+			<image>rtl2.png</image>
+		</item>
+		<item>
+			<title>Super RTL</title>
+			<epg>Super RTL</epg>
+			<file>s-rtl</file>
+			<image>super_rtl.png</image>
+		</item>
+		<item>
+			<title>VIVA</title>
+			<epg>VIVA</epg>
+			<file>viva</file>
+			<image>viva.png</image>
+		</item>
+		<item>
+			<title>Das Vierte</title>
+			<epg>Das VIERTE</epg>
+			<file>dasvierte</file>
+			<image>das_vierte.png</image>
+		</item>
+		<item>
+			<title>Arte</title>
+			<epg>Arte</epg>
+			<file>arte</file>
+			<image>arte.png</image>
+		</item>
+		<item>
+			<title>VOX</title>
+			<epg>VOX</epg>
+			<file>vox</file>
+			<image>vox.png</image>
+		</item>
+		<item>
+			<title>Sport 1</title>
+			<epg>SPORT1</epg>
+			<file>sport1</file>
+			<image>sport_1.png</image>
+		</item>
+		<item>
+			<title>DMAX</title>
+			<epg>DMAX</epg>
+			<file>dmax</file>
+			<image>dmax.png</image>
+		</item>
+		<item>
+			<title>Eurosport</title>
+			<epg>Eurosport</epg>
+			<file>eusp</file>
+			<image>eurosport.png</image>
+		</item>
+		<item>
+			<title>WDR</title>
+			<epg>WDR</epg>
+			<file>wdr</file>
+			<image>wdr.png</image>
+		</item>
+		<item>
+			<title>NDR</title>
+			<epg>NDR</epg>
+			<file>ndr</file>
+			<image>ndr.png</image>
+		</item>
+		<item>
+			<title>SWR</title>
+			<epg>SWR</epg>
+			<file>swrbw</file>
+			<image>swr.png</image>
+		</item>
+		<item>
+			<title>NTV</title>
+			<epg>n-tv</epg>
+			<file>n-tv</file>
+			<image>ntv.png</image>
+		</item>
+		<item>
+			<title>3sat</title>
+			<epg>3sat</epg>
+			<file>3sat</file>
+			<image>3sat.png</image>
+		</item>
+		<item>
+			<title>ORF 1</title>
+			<epg>ORF eins</epg>
+			<file>orf1</file>
+			<image>orf_1.png</image>
+		</item>
+		<item>
+			<title>ORF 2</title>
+			<epg>ORF 2</epg>
+			<file>orf2</file>
+			<image>orf_2.png</image>
+		</item>
+		<item>
+			<title>SF 1</title>
+			<epg></epg>
+			<file>srf1</file>
+			<image>sf_1.png</image>
+		</item>
+		<item>
+			<title>SF 2</title>
+			<epg></epg>
+			<file>srf2</file>
+			<image>sf_2.png</image>
+		</item>
+		<item>
+			<title>ATV</title>
+			<epg>ATV</epg>
+			<file>atv</file>
+			<image>atv.png</image>
+		</item>
+		<item>
+			<title>3+</title>
+			<epg>3plus</epg>
+			<file>3plus</file>
+			<image>3plus.png</image>
+		</item>
+		<item>
+			<title>Servus TV</title>
+			<epg>Servus TV</epg>
+			<file>servustv</file>
+			<image>servus_tv.png</image>
+		</item>
+		<item>
+			<title>BBC One</title>
+			<epg></epg>
+			<file>bbc1</file>
+			<image>bbc_one.png</image>
+		</item>
+		<item>
+			<title>BBC Two</title>
+			<epg></epg>
+			<file>bbc2</file>
+			<image>bbc_two.png</image>
+		</item>
+		<item>
+			<title>CNN</title>
+			<epg>CNN</epg>
+			<file>cnn</file>
+			<image>cnn.png</image>
+		</item>
+		<item>
+			<title>ITV 1</title>
+			<epg></epg>
+			<file>itv1</file>
+			<image>itv1.png</image>
+		</item>
+		<item>
+			<title>ITV 2</title>
+			<epg></epg>
+			<file>itv2</file>
+			<image>itv2.png</image>
+		</item>
+	</channel>
+</xml>
