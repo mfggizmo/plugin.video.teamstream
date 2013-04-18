@@ -21,7 +21,7 @@ __email__      = "siriuz@gmx.net"
 ########################
 # constants definition #
 ########################
-PLUGINID = "plugin.video.teamstream"
+PLUGINID = "plugin.video.teamstream-win32"
 MODE_PLAY = "play"
 SHOW_CHANNEL = "channel"
 PARAMETER_KEY_MODE = "mode"
@@ -56,13 +56,19 @@ def notify( title, message):
 	xbmc.executebuiltin("XBMC.Notification("+title+","+message+")")			
 		
 def log( msg):
-	msg = msg.encode( "latin-1")
 	logf = open( LOGFILE, "a")
 	logf.write( "%s: " % datetime.datetime.now().strftime( "%Y-%m-%d %I:%M:%S"))
-	logf.write( msg)
+	try:
+		#msg = msg.encode( "latin-1")
+		logf.write( msg)
+		xbmc.log("### %s" % msg, level=xbmc.LOGNOTICE)
+	except:
+		logf.write( "logging error")
+	
 	logf.write( '\n')
 	logf.close()
-	xbmc.log("### %s" % msg, level=xbmc.LOGNOTICE)
+	logf.close()
+	
 	
 def fetchHttp( url, args={}, hdrs={}, post=False):
 	#log( "fetchHttp(%s): %s" % ("POST" if post else "GET", url))
