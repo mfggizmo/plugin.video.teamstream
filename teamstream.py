@@ -61,9 +61,9 @@ def log( msg):
 	try:
 		#msg = msg.encode( "latin-1")
 		logf.write( msg)
-		xbmc.log("### %s" % msg, level=xbmc.LOGNOTICE)
+		xbmc.log("### teamstream.to: %s" % msg, level=xbmc.LOGNOTICE)
 	except:
-		logf.write( "logging error")
+		logf.write( "Logging error")
 	
 	logf.write( '\n')
 	logf.close()
@@ -114,10 +114,30 @@ def login():
 	cookies = cookielib.LWPCookieJar()
 	opener = urllib2.build_opener( urllib2.HTTPCookieProcessor(cookies))
 	urllib2.install_opener( opener)
-	#log ( repr( cookie))
-	log( "logging in...")
+	
+	log( "Logging in ...")
+	html = fetchHttp( URL_BASE )
+	
+	js_url = lxml.html.fromstring( html )
+	js_url = js_url.xpath("//script")[0].get("src")
+	js_url = URL_BASE + js_url
+	js = fetchHttp( js_url, hdrs = { "Referer": "http://www.teamstream.to/" })
+	m = re.search(".*\"(.*)\"\).*", js)
+	hsh2 = m.group(1)
+	m = re.search(".*scf\('(.*)'\+'(.*)',.*", html)
+	hsh1 = m.group(1) + m.group(2)
+	sitechrx = hsh1 + hsh2
+	
 	login = settings.getSetting( id="login")
 	password = settings.getSetting( id="password")
+	
+	if (login == "" or password == ""):
+		error = "Username and/or password not set"
+		log( "Login failure: " + error)
+		notify( "Login Failure!", "Error: " + error)
+		xbmcplugin.endOfDirectory( handle=pluginhandle, succeeded=False)
+		return False	
+	
 	url = URL_BASE + "login.php"
 	args = {	"vb_login_username": login,
 				"vb_login_password": password,
@@ -126,18 +146,33 @@ def login():
 				"url": "/forum.php",
 				"do": "login"}
 	
-	cookie = cookielib.Cookie(version=0, name='sitechrx', value='a84cdef5f86879be4509b67216281021', port=None, port_specified=False, domain='www.teamstream.to', domain_specified=False, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=None, discard=True, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)
+	cookie = cookielib.Cookie(version=0, name='sitechrx', value=sitechrx, port=None, port_specified=False, domain='www.teamstream.to', domain_specified=False, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=None, discard=True, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)
 	cookies.set_cookie(cookie)	
 	reply = fetchHttp( url, args, post=True);
+	
 	if not "deine Anmeldung" in reply:
-		log( "login failure")
-		log( reply)
-		notify( "Login Failure!", "Please set your login/password in the addon settings")
+		if 'onload="scf(' in reply:
+			error = "Cookie Error"
+			log( "Login failure: " + error)	
+			log( "Vardump[js_url]: " + js_url)
+			log( "Vardump[js]: " + js)
+			log( "Vardump[sitechrx]: " + sitechrx)
+			log( "Reply: " + reply)
+		elif "Login failed" in reply:
+			error = "Username / password mismatch"
+			log( "Login failure: " + error)
+		else:
+			error = "Unknown error"
+			log( "Login failure: " + error)	
+			log( "Reply: " + reply)
+	
+		notify( "Login Failure!", "Error: " + error)
 		xbmcplugin.endOfDirectory( handle=pluginhandle, succeeded=False)
 		return False
-	log( "login ok")
-	return True
-	
+	else:
+		log( "Login ok")
+		return True
+
 def get_channels():
 	xml = etree.parse( STREAMS_FILE )
 	channels = []
