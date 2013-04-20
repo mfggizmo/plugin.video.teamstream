@@ -414,8 +414,9 @@ def showEventplan():
 	days = ("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag")
 	for i in range(7):	
 		offset = (datetime.datetime.today() + datetime.timedelta(days=i)).weekday()
+		img = getImage( days[offset] + ".png")
 		label = days[offset]
-		addDirectoryItem(label, {PARAMETER_KEY_MODE: SHOW_EVENTDAY, PARAMETER_KEY_DAY: str(offset+1)}, folder=True)
+		addDirectoryItem(label, {PARAMETER_KEY_MODE: SHOW_EVENTDAY, PARAMETER_KEY_DAY: str(offset+1)}, image=img, folder=True)
 		
 	xbmcplugin.endOfDirectory( handle=pluginhandle, succeeded=True)
 	
