@@ -68,7 +68,7 @@ def log( msg):
 		logf.write( msg)
 		xbmc.log("### teamstream.to: %s" % msg, level=xbmc.LOGNOTICE)
 	except:
-		logf.write( "Logging error")
+		logf.write( "Logging Fehler")
 	
 	logf.write( '\n')
 	logf.close()
@@ -137,9 +137,9 @@ def login():
 	password = settings.getSetting( id="password")
 	
 	if (login == "" or password == ""):
-		error = "Username and/or password not set"
-		log( "Login failure: " + error)
-		notify( "Login Failure!", "Error: " + error)
+		error = "Username und/oder Passwort nicht gesetzt"
+		log( "Login fehlgeschlagen:: " + error)
+		notify( "Login fehlgeschlagen!", "Fehler: " + error)
 		xbmcplugin.endOfDirectory( handle=pluginhandle, succeeded=False)
 		return False	
 	
@@ -157,21 +157,21 @@ def login():
 	
 	if not "deine Anmeldung" in reply:
 		if 'onload="scf(' in reply:
-			error = "Cookie Error"
-			log( "Login failure: " + error)	
+			error = "Cookie Fehler"
+			log( "Login fehlgeschlagen: " + error)	
 			log( "Vardump[js_url]: " + js_url)
 			log( "Vardump[js]: " + js)
 			log( "Vardump[sitechrx]: " + sitechrx)
 			log( "Reply: " + reply)
 		elif "Login failed" in reply:
-			error = "Username / password mismatch"
-			log( "Login failure: " + error)
+			error = "Username / Password stimmen nicht ueberein"
+			log( "Login fehlgeschlagen: " + error)
 		else:
-			error = "Unknown error"
-			log( "Login failure: " + error)	
-			log( "Reply: " + reply)
+			error = "Unbekannter Fehler"
+			log( "Login fehlgeschlagen: " + error)	
+			log( "Antwort: " + reply)
 	
-		notify( "Login Failure!", "Error: " + error)
+		notify( "Login fehlgeschlagen!", "Fehler: " + error)
 		xbmcplugin.endOfDirectory( handle=pluginhandle, succeeded=False)
 		return False
 	else:
@@ -330,7 +330,7 @@ def downloadImage(url, img):
 		try:
 			response = urllib2.urlopen(url)
 		except:
-			log( "Cant' fetch image: " + img)	
+			log( "Bilddownload fehlgeschlagen: " + img)	
 			return
 
 		the_page = response.read()
@@ -350,10 +350,10 @@ def getEventPlan():
 			html = open(EVENTPLAN_CACHE, 'r').read()
 			return html
 		else:
-			log( "Eventplan cache is too old, reloading it ...")
+			log( "Eventplaner Cache ist zu alt, erneuere ihn ...")
 	
 	else:
-		log( "Can't find eventplan cache, creating it ...")
+		log( "Eventplaner Cache nicht gefunden, erstelle ihn ...")
 	
 	if login():
 		html = fetchHttp(url)		
@@ -440,15 +440,15 @@ def showEventDay(day):
 			if playpath:			
 				addDirectoryItem( title, { PARAMETER_KEY_IMAGE:  event["img"], PARAMETER_KEY_NAME: name, PARAMETER_KEY_PLAYPATH: playpath, PARAMETER_KEY_MODE: MODE_PLAY, PARAMETER_KEY_TITLE: title }, img)
 			else:
-				log( "This station isn't playable yet: " + event["station_id"])
+				log( "Dieser Kanel kann noch nicht abgespielt werden: " + event["station_id"])
 				img = IMG_PATH + "error.png"
 				addDirectoryItem( title, image=img, folder=True)
 
 		xbmcplugin.endOfDirectory( handle=pluginhandle, succeeded=True)
 	else:
-		error = "Noch keine Daten vorhanden fuer diesen Tag"
+		error = "Noch keine Daten fuer diesen Tag vorhanden"
 		log ( error)
-		notify("Eventplan Fehler:", error)
+		notify("Eventplaner Fehler:", error)
 			
 def addDirectoryItem( name, params={}, image="", total=0, folder=False):
 	'''Add a list item to the XBMC UI.'''
@@ -504,7 +504,7 @@ elif mode == MODE_PLAY:
 	xbmc.Player().play(url, li)
 	xbmc.sleep(1000)
 	if not xbmc.Player().isPlaying():
-		notify("Stream Error", "Cleaning cache and retrying ...")
+		notify("Stream Fehler", "Cache wird erneuert ...")
 		stream_params = getStreamparams(force=True)
 		url = "%s swfUrl=%s pageUrl=%s playpath=%s swfVfy=true live=true" % (stream_params["rtmp"], stream_params["flv"], stream_params["pageurl"], playpath)
 		xbmc.Player().play(url, li)
