@@ -437,7 +437,7 @@ def showEventDay(day):
 			playpath = getPlayPath( event["station_id"] )
 			
 			if playpath:			
-				addDirectoryItem( title, { PARAMETER_KEY_IMAGE: img, PARAMETER_KEY_NAME: name, PARAMETER_KEY_PLAYPATH: playpath, PARAMETER_KEY_MODE: MODE_PLAY, PARAMETER_KEY_TITLE: title }, img)
+				addDirectoryItem( title, { PARAMETER_KEY_IMAGE:  event["img"], PARAMETER_KEY_NAME: name, PARAMETER_KEY_PLAYPATH: playpath, PARAMETER_KEY_MODE: MODE_PLAY, PARAMETER_KEY_TITLE: title }, img)
 			else:
 				log( "This station isn't playable yet: " + event["station_id"])
 				img = IMG_PATH + "error.png"
@@ -494,7 +494,7 @@ elif mode == MODE_PLAY:
 	url = "%s swfUrl=%s pageUrl=%s playpath=%s swfVfy=true live=true" % (stream_params["rtmp"], stream_params["flv"], stream_params["pageurl"], playpath)
 	name = params[PARAMETER_KEY_TITLE].replace("+"," ")
 	
-	img = params[PARAMETER_KEY_IMAGE]
+	img = getImage( params[PARAMETER_KEY_IMAGE] )
 	
 	li = xbmcgui.ListItem( name, iconImage=img, thumbnailImage=img)
 	li.setProperty( "IsPlayable", "true")
