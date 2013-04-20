@@ -1,15 +1,19 @@
-Teamstream.to Live-TV Addon for XBMC
-==============================
+Teamstream.to Live-TV Addon für XBMC
+====================================
 
-Steps to be done before using the teamstream addon:
---------------------------------------------------------------------------------
-* get an account at www.teamstream.to
-* buy elite access
-* download patched librtmp.dll (KSV) from https://github.com/K-S-V/Scripts/downloads
-* navigate to %XBMC-ROOT%\system\players\dvdplayer and replace librtmp.dll
-* enter your login and password in the addon settings
-* enjoy live television!
+Kurzanleitung für die Benutzung des teamstream.to XBMC plugin:
+--------------------------------------------------------------------------------------
+* Besorge dir einen invite für www.teamstream.to
+* Kaufe dir einen Elite Zugang
+* Lade dir die gepatchte librtmp.dll (KSV) von hier: https://github.com/K-S-V/Scripts/downloads
+* Ersetze sie mit der librtmp.dll hier: %XBMC-ROOT%\system\players\dvdplayer
+* Lade dir mein Addon Repository von hier: https://github.com/siriuzwhite/xbmc.repository/raw/master/repository/repository.addons.siriuz/repository.addons.siriuz-1.0.0.zip
+* Naviegiere im XBMC zu: 'System -> Add-ons -> Aus Zip Datei installieren' und installiere mein Repository
+* Navigiere zu: 'System -> Add-ons -> weitere Add-ons -> Siriuz Add-on Repository -> Video Add-Ons' und installiere Teamstream.to
+* Gib deinen Benutzernamen und dein Passwort in den Plugin Einstellungen ein.
+* Viel Spaß beim Sky schauen ;)
 
 Credit:
---------------------------------------------------------------------------------
-Author of Teleboy Plugin - this plugin is based on it
+--------------------------------------------------------------------------------------
+- an den Autor vom Teleboy.ch plugin, auf dem dieses Plugin hier hauptsächlich basiert
+- an die Crew von teamstream.to für ihren einzigartigen Service
