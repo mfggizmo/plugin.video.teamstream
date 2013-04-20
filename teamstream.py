@@ -23,7 +23,9 @@ __email__      = "siriuz@gmx.net"
 ########################
 PLUGINID = "plugin.video.teamstream-win32"
 MODE_PLAY = "play"
-SHOW_CHANNEL = "channel"
+SHOW_CHANNEL= "channel"
+SHOW_EVENTPLAN = "eventplan"
+SHOW_EVENTDAY = "eventday"
 PARAMETER_KEY_MODE = "mode"
 PARAMETER_KEY_PLAYPATH = "playpath"
 PARAMETER_KEY_STATION = "station"
@@ -33,13 +35,16 @@ PARAMETER_KEY_TITLE = "title"
 PARAMETER_KEY_CHANNEL = "channel"
 PARAMETER_KEY_NAME = "name"
 PARAMETER_KEY_IMAGE = "image"
+PARAMETER_KEY_DAY = "day"
 
 URL_BASE = "http://www.teamstream.to/"
 EPG_URL = "http://www.hoerzu.de/tv-programm/jetzt/"
-CACHE_FILE = xbmc.translatePath( "special://home/addons/" + PLUGINID + "/resources/cache.dat")
+STREAM_CACHE = xbmc.translatePath( "special://home/addons/" + PLUGINID + "/resources/cache/stream.cache")
+EVENTPLAN_CACHE = xbmc.translatePath( "special://home/addons/" + PLUGINID + "/resources/cache/eventplan.cache")
 STREAMS_FILE = xbmc.translatePath( "special://home/addons/" + PLUGINID + "/resources/streams.xml")
-LOGFILE =  xbmc.translatePath( "special://home/addons/" + PLUGINID + "/resources/log.txt")
+LOGFILE =  xbmc.translatePath( "special://home/addons/" + PLUGINID + "/resources/teamstream.log")
 IMG_PATH = xbmc.translatePath( "special://home/addons/" + PLUGINID + "/resources/images/")
+
 
 pluginhandle = int(sys.argv[1])
 settings = xbmcaddon.Addon( id=PLUGINID)
@@ -173,7 +178,7 @@ def login():
 		log( "Login ok")
 		return True
 
-def get_channels():
+def getChannels():
 	xml = etree.parse( STREAMS_FILE )
 	channels = []
 	for channel in xml.xpath("//channel"):
@@ -184,7 +189,7 @@ def get_channels():
 	return channels
 		
 		
-def get_channel_items(chan):
+def getChannelItems(chan):
 	items = []
 	xml = etree.parse( STREAMS_FILE )
 	for channel in xml.xpath("//channel"):
@@ -196,41 +201,42 @@ def get_channel_items(chan):
 								"playpath": item.xpath("file")[0].text } )
 			return items
 
-def get_image(image):
+def getImage(image):
 	image = IMG_PATH + image
 	if os.path.exists(image):
 		return image
 	else:
 		return ""
 	
-def get_streamparams(force=False):
-	if os.path.exists(CACHE_FILE) and not force:
-		params = pickle.load( open(CACHE_FILE, 'r') )
+def getStreamparams(force=False):
+	if os.path.exists(STREAM_CACHE) and not force:
+		params = pickle.load( open(STREAM_CACHE, 'r') )
 		return params
+	else:
+		if login():
+			url = URL_BASE + getLink()
+			html = fetchHttp(url, post=False)
+			html = lxml.html.fromstring( html )
+			
+			streamcontainer = html.xpath("//div[@id='streamcontainer']")[0]
+			flv = streamcontainer.xpath("embed")[0].get("src")
+			flashvars = streamcontainer.xpath("embed")[0].get("flashvars")
+			playlist = flashvars.split("file=")[1].split("&")[0]
+			xml = fetchHttp(playlist, hdrs= { "Referer": url },  post=False)
+			xml = etree.fromstring( xml )
+			namespace = { "jwplayer":"http://developer.longtailvideo.com/" }
+			rtmp = xml.xpath("//rss/channel/item/jwplayer:streamer", namespaces=namespace)[0].text
+			
+			params = {	"flv": flv,
+						"rtmp": rtmp,
+						"pageurl": url }
+			
+			pickle.dump( params, open(STREAM_CACHE, 'w') )				
+			return params
+		else:
+			return False
 
-	if login():
-		url = URL_BASE + get_link()
-		html = fetchHttp(url, post=False)
-		html = lxml.html.fromstring( html )
-		
-		streamcontainer = html.xpath("//div[@id='streamcontainer']")[0]
-		#return lxml.html.tostring(streamcontainer)
-		flv = streamcontainer.xpath("embed")[0].get("src")
-		flashvars = streamcontainer.xpath("embed")[0].get("flashvars")
-		playlist = flashvars.split("file=")[1].split("&")[0]
-		xml = fetchHttp(playlist, hdrs= { "Referer": url },  post=False)
-		xml = etree.fromstring( xml )
-		namespace = { "jwplayer":"http://developer.longtailvideo.com/" }
-		rtmp = xml.xpath("//rss/channel/item/jwplayer:streamer", namespaces=namespace)[0].text
-		
-		params = {	"flv": flv,
-					"rtmp": rtmp,
-					"pageurl": url }
-		
-		pickle.dump( params, open(CACHE_FILE, 'w') )				
-		return params
-
-def get_link(url=""):
+def getLink(url=""):
 	flag = False
 	
 	if url == "":
@@ -245,11 +251,11 @@ def get_link(url=""):
 			href=link.get("href")
 			if "newpost" not in href:
 				if flag:
-					return get_link(URL_BASE + href)
+					return getLink(URL_BASE + href)
 				else:
 					return href
 
-def get_epg(channel, html):
+def getEPG(channel, html):
 	stime = (int(time.strftime("%H")) * 60) + (int(time.strftime("%M")))
 	try:
 		html = lxml.html.fromstring( html )
@@ -289,30 +295,104 @@ def get_epg(channel, html):
 				return the_string
 	except:
 		return ""
+		
+def getEventsPerDay(day, html):
+	xpath = "//div[@id='tab-%s']/table" % day
+	table = html.xpath(xpath)
+	if len(table) != 0:
+		return getEventRows(table[0])
+	else:
+		return False
+	
+def getEventRows(table):
+	ret_rows = []
+	for row in table.xpath("tr"):
+		name = lxml.html.tostring(row.xpath("td[3]")[0])
+		m = re.search('<td style="width:295px">(.*)<br>(.*)</td>', name)
+		name = m.group(1) + ": " + m.group(2)
+		url = URL_BASE + "plan/" + row.xpath("td[1]/img")[0].get("src")
+		img = url.split("pics/")[1]
+		downloadImage( url, img)
+		ret_rows.append({ "img": img,
+					"start_time": row.xpath("td[2]")[0].text,
+					"name": name,
+					"station_id": row.xpath("td[4]")[0].text })
+		
+	return ret_rows
+	
+
+def downloadImage(url, img):
+	img = IMG_PATH + img
+	if not os.path.exists(img):
+		try:
+			response = urllib2.urlopen(url)
+		except:
+			log( "Cant' fetch image: " + img)	
+			return
+
+		the_page = response.read()
+		f = open(img, 'wb')
+		f.write(the_page)
+		f.close()
+		
+def getEventPlan():
+	
+	url = URL_BASE + "plan/index.php"
+	write = False
+	
+	if os.path.exists(EVENTPLAN_CACHE):
+		fileAge = time.time() - os.path.getmtime(EVENTPLAN_CACHE)
+		if fileAge < 12*60*60:
+			log( "Loading eventplan from cache ...")
+			html = open(EVENTPLAN_CACHE, 'r').read()
+			return html
+		else:
+			log( "Eventplan cache is too old, reloading it ...")
+	
+	else:
+		log( "Can't find eventplan cache, creating it ...")
+	
+	if login():
+		html = fetchHttp(url)		
+		f = open(EVENTPLAN_CACHE, 'w')
+		f.write(html)
+		f.close()
+		return html
+		
+def getPlayPath(station_id):
+	xml = etree.parse( STREAMS_FILE )
+	for item in xml.xpath("//item"):
+		event_id = item.get("event_id")
+		if event_id is not None and event_id == station_id:
+			return item.xpath("file")[0].text
+	
+	return False
 	
 ###################
 # Directory Stuff #
 ###################
-def show_main():
-	get_streamparams()
-	for channel in get_channels():
+def showMain():
+	getStreamparams()
+	for channel in getChannels():
 		chan = channel["name"]
-		img = get_image( channel["image"] )
+		img = getImage( channel["image"] )
 		addDirectoryItem( chan, {PARAMETER_KEY_MODE: SHOW_CHANNEL, PARAMETER_KEY_CHANNEL: chan }, img, folder=True)
-
+	
+	addDirectoryItem("Eventplan", {PARAMETER_KEY_MODE: SHOW_EVENTPLAN}, image = getImage("eventplanner.png"), folder=True)
 	xbmcplugin.endOfDirectory( handle=pluginhandle, succeeded=True)
+	
 
-def show_channel(channel):
+def showChannel(channel):
 
 	channel = channel.replace("+", " ")
-
 	req = urllib2.Request( EPG_URL )
 	html = urllib2.urlopen(req).read()
+		
 	
-	for item in get_channel_items(channel):
+	for item in getChannelItems(channel):
 		name = item["title"]
-		if item['epg'] is not None:
-			epg = get_epg( item['epg'], html )
+		if item['epg'] is not 	None:
+			epg = getEPG( item['epg'], html )
 			if epg != "":
 				title = name + " - " + epg
 			else:
@@ -321,12 +401,51 @@ def show_channel(channel):
 			title = name
 			
 		playpath = item["playpath"]
-		img = get_image ( item["image"] )
+		img = getImage ( item["image"])
 			
 		addDirectoryItem( title, { PARAMETER_KEY_IMAGE: item["image"], PARAMETER_KEY_NAME: name, PARAMETER_KEY_PLAYPATH: playpath, PARAMETER_KEY_MODE: MODE_PLAY, PARAMETER_KEY_TITLE: title }, img)
 
 	xbmcplugin.endOfDirectory( handle=pluginhandle, succeeded=True)
+def showEventplan():
 	
+	days = ("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag")
+	for i in range(7):	
+		offset = (datetime.datetime.today() + datetime.timedelta(days=i)).weekday()
+		label = days[offset]
+		addDirectoryItem(label, {PARAMETER_KEY_MODE: SHOW_EVENTDAY, PARAMETER_KEY_DAY: str(offset+1)}, folder=True)
+		
+	xbmcplugin.endOfDirectory( handle=pluginhandle, succeeded=True)
+	
+def showEventDay(day):
+
+	html = getEventPlan()
+
+	try:
+		html = html.split('<body bgcolor="transparent" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">')[1]	
+	except:
+		log( html)
+
+	html = lxml.html.fromstring( html )
+	events = getEventsPerDay(day, html)
+	if events:
+		for event in events:
+			title = name = event["start_time"] + " - " + event["name"]
+			img = getImage( event["img"])
+			playpath = getPlayPath( event["station_id"] )
+			
+			if playpath:			
+				addDirectoryItem( title, { PARAMETER_KEY_IMAGE: img, PARAMETER_KEY_NAME: name, PARAMETER_KEY_PLAYPATH: playpath, PARAMETER_KEY_MODE: MODE_PLAY, PARAMETER_KEY_TITLE: title }, img)
+			else:
+				log( "This station isn't playable yet: " + event["station_id"])
+				img = IMG_PATH + "error.png"
+				addDirectoryItem( title, image=img, folder=True)
+
+		xbmcplugin.endOfDirectory( handle=pluginhandle, succeeded=True)
+	else:
+		error = "Noch keine Daten vorhanden fuer diesen Tag"
+		log ( error)
+		notify("Eventplan Fehler:", error)
+			
 def addDirectoryItem( name, params={}, image="", total=0, folder=False):
 	'''Add a list item to the XBMC UI.'''
 	img = "DefaultVideo.png"
@@ -352,28 +471,36 @@ mode = params.get(PARAMETER_KEY_MODE, "0")
 # depending on the mode, call the appropriate function to build the UI.
 if not sys.argv[2]:
 	# new start
-	ok = show_main()
+	ok = showMain()
 
 elif mode == SHOW_CHANNEL:
 	channel = params[PARAMETER_KEY_CHANNEL]
-	show_channel(channel)
+	showChannel(channel)
+	
+elif mode == SHOW_EVENTPLAN:
+	showEventplan()
+	
+elif mode == SHOW_EVENTDAY:
+	day = params[PARAMETER_KEY_DAY]
+	log( "Calling day: " + day)
+	showEventDay(day)
 
 elif mode == MODE_PLAY:
-	stream_params = get_streamparams()
+	stream_params = getStreamparams()
 	playpath = params[PARAMETER_KEY_PLAYPATH]
 	url = "%s swfUrl=%s pageUrl=%s playpath=%s swfVfy=true live=true" % (stream_params["rtmp"], stream_params["flv"], stream_params["pageurl"], playpath)
 	name = params[PARAMETER_KEY_TITLE].replace("+"," ")
 	
-	img = get_image ( params[PARAMETER_KEY_IMAGE] )
+	img = params[PARAMETER_KEY_IMAGE]
 	
 	li = xbmcgui.ListItem( name, iconImage=img, thumbnailImage=img)
 	li.setProperty( "IsPlayable", "true")
 	li.setProperty( "Video", "true")
 	
 	xbmc.Player().play(url, li)
-	xbmc.sleep(500)
+	xbmc.sleep(1000)
 	if not xbmc.Player().isPlaying():
 		notify("Stream Error", "Cleaning cache and retrying ...")
-		stream_params = get_streamparams(force=True)
+		stream_params = getStreamparams(force=True)
 		url = "%s swfUrl=%s pageUrl=%s playpath=%s swfVfy=true live=true" % (stream_params["rtmp"], stream_params["flv"], stream_params["pageurl"], playpath)
 		xbmc.Player().play(url, li)

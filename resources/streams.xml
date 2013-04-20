@@ -1,156 +1,156 @@
 <xml>
 	<channel name="Sky Streams" image="sky_streams.png">
-		<item>
+		<item event_id="1">
 			<title>Sky Sport HD1</title>
 			<epg>Sky Sport HD 1</epg>
 			<file>pappkamerad1hd</file>
 			<image>01.png</image>
 		</item>
-		<item>
+		<item event_id="2">
 			<title>Sky Sport HD2</title>
 			<epg>Sky Sport HD 2</epg>
 			<file>pappkamerad2hd</file>
 			<image>02.png</image>
 		</item>
-		<item>
+		<item event_id="3">
 			<title>Sky Sport HD EXTRA</title>
 			<epg>Sky Sport HD Extra</epg>
 			<file>pappkamerad3hd</file>
 			<image>03.png</image>
 		</item>
 
-		<item>
+		<item event_id="4">
 			<title>History HD</title>
 			<epg>History HD</epg>
 			<file>pappkamerad4hd</file>
 			<image>04.png</image>
 		 </item>
 
-		<item>
+		<item event_id="5">
 			<title>Discovery HD</title>
 			<epg>Discovery HD</epg>
 			<file>pappkamerad5hd</file>
 			<image>05.png</image>
 		 </item>
 
-		<item>
+		<item event_id="6">
 			<title>Nat Geo HD</title>
 			<epg>National Geographic Channel HD</epg>
 			<file>pappkamerad6hd</file>
 			<image>06.png</image>
 		</item>
 
-		<item>
+		<item event_id="7">
 			<title>Sky Cinema HD</title>
 			<epg>Sky Cinema HD</epg>
 			<file>pappkamerad7hd</file>
 			<image>07.png</image>
 		</item>
 
-		<item>
+		<item event_id="8">
 			<title>ESPN America HD</title>
 			<epg>ESPN America HD</epg>
 			<file>pappkamerad8hd</file>
 			<image>08.png</image>
 		</item>
 
-		<item>
+		<item event_id="9">
 			<title>Sky Cinema +24</title>
 			<epg>Sky Cinema +24</epg>
 			<file>pappkamerad9hd</file>
 			<image>09.png</image>
 		</item>
 
-		<item>
+		<item event_id="10">
 			<title>Sky Action HD</title>
 			<epg>Sky Action HD</epg>
 			<file>streamer9hd</file>
 			<image>10.png</image>
 		 </item>
 
-		<item>
+		<item event_id="11">
 			<title>Sky 3D</title>
 			<epg>Sky 3D</epg>
 			<file>streamer10</file>
 			<image>11.png</image>
 		 </item>
 
-		<item>
+		<item event_id="12">
 			<title>Sportdigital</title>
 			<epg>sportdigital</epg>
 			<file>peppi1hd</file>
 			<image>12.png</image>
 		</item>
 
-		<item>
+		<item event_id="13">
 			<title>Sky Atlantic HD</title>
 			<epg>Sky Atlantic HD</epg>
 			<file>peppi2hd</file>
 			<image>13.png</image>
 		</item>
 
-		<item>
+		<item event_id="14">
 			<title>Sky Hits HD</title>
 			<epg>Sky Hits HD</epg>
 			<file>peppi3hd</file>
 			<image>14.png</image>
 		</item>
 
-		<item>
+		<item event_id="15">
 			<title>Sky Syfy</title>
 			<epg>Syfy</epg>
 			<file>peppi4hd</file>
 			<image>16.png</image>
 		</item>
-		<item>
+		<item event_id="16">
 			<title>Nat Geo Wild</title>
 			<epg>Nat Geo Wild</epg>
 			<file>peppi5hd</file>
 			<image>16.png</image>
 		</item>
-		<item>
+		<item event_id="17">
 			<title>FOX HD</title>
 			<epg>FOX HD</epg>
 			<file>peppi6hd</file>
 			<image>17.png</image>
 		</item>
-		<item>
+		<item event_id="18">
 			<title>TNT Serie HD</title>
 			<epg>TNT Serie HD</epg>
 			<file>peppi7hd</file>
 			<image>18.png</image>
 		</item>
-		<item>
+		<item event_id="19">
 			<title>13th Street HD</title>
 			<epg>13TH STREET Universal HD</epg>
 			<file>peppi8hd</file>
 			<image>19.png</image>
 		</item>
-		<item>
+		<item event_id="20">
 			<title>Sport 1+ HD</title>
 			<epg>SPORT1+ HD</epg>
 			<file>peppi9hd</file>
 			<image>20.png</image>
 		</item>
-		<item>
+		<item event_id="21">
 			<title>Sky Comedy</title>
 			<epg>Sky Comedy</epg>
 			<file>nike</file>
 			<image>21.png</image>
 		</item>
-		<item>
+		<item event_id="22">
 			<title>Sky Sport News HD</title>
 			<epg>Sky Sport News HD</epg>
 			<file>f12012hd</file>
 			<image>22.png</image>
 		</item>
-		<item>
+		<item event_id="23">
 			<title>Disney Channel</title>
 			<epg>Disney Channel</epg>
 			<file>prime1</file>
 			<image>23.png</image>
 		</item>
-		<item>
+		<item event_id="24">
 			<title>Pro7 HD</title>
 			<epg>ProSieben</epg>
 			<file>nike2</file>
@@ -236,7 +236,7 @@
 			<file>vox</file>
 			<image>vox.png</image>
 		</item>
-		<item>
+		<item event_id="Sport 1">
 			<title>Sport 1</title>
 			<epg>SPORT1</epg>
 			<file>sport1</file>
@@ -248,7 +248,7 @@
 			<file>dmax</file>
 			<image>dmax.png</image>
 		</item>
-		<item>
+		<item event_id="Eurosport">
 			<title>Eurosport</title>
 			<epg>Eurosport</epg>
 			<file>eusp</file>
@@ -302,7 +302,7 @@
 			<file>srf1</file>
 			<image>sf_1.png</image>
 		</item>
-		<item>
+		<item event_id="SF 2">
 			<title>SF 2</title>
 			<epg></epg>
 			<file>srf2</file>
