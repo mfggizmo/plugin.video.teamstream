@@ -8,6 +8,12 @@ import simplejson as json
 import os.path
 import pickle
 import time
+
+if platform.system() == "Windows":
+	sys.modules['lxml'] = __import__('lxml_win')
+else platform.system() == "Linux":
+	sys.modules['lxml'] = __import__('lxml_linux')
+
 import lxml
 import lxml.html
 from lxml import etree

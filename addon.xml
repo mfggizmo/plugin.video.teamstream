@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.teamstream-win32"
+<addon id="plugin.video.teamstream"
        name="Teamstream.to"
-       version="0.2.0"
+       version="0.3.0"
        provider-name="siriuz">
   <requires>
     <import addon="xbmc.python" version="1.0" />
-	<import addon="script.module.lxml-win32" version="3.1.2" />
+	<import addon="script.module.lxml" version="3.1.2" />
   </requires>
   <extension point="xbmc.python.pluginsource"
             library="teamstream.py">
         <provides>video</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <platform>windx wingl</platform>
+    <platform>all</platform>
     <summary>Live-TV powered by Teamstream.to</summary>
     <description>
 Kurzanleitung:
