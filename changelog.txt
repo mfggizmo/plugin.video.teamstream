@@ -1,3 +1,7 @@
+version 0.3.0 - 04/22/2013
+  * multi platform support and repository restructuring
+  * now supporting linux based xmbc
+
 version 0.2.1 - 04/21/2013
   * fixed packaging error on broken version 0.2.1
 
