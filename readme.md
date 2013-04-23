@@ -10,5 +10,5 @@ Kurzanleitung für die Benutzung des Teamstream.to XBMC plugin:
 
 Credits:
 --------------------------------------------------------------------------------------
-- an den Autor vom Teleboy.ch Plugin, dieses Plugin basiert zu großen Teilen darauf
+- an Skandi (http://redmine.mindmade.org/projects/xbmc-teleboyn)
 - an die Crew von teamstream.to für ihren einzigartigen Service
