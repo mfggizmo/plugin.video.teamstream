@@ -1,17 +1,17 @@
-version 0.3.0 - 04/22/2013
-  * multi platform support and repository restructuring
-  * now supporting linux based xmbc
+version 0.3.0 - 04/23/2013
+  * Plugin nun Platform-Neutral, da lxml binary Paket entfernt
+  * Abhängigkeiten müssen nun manuell installiert werden (siehe Wiki)
 
 version 0.2.1 - 04/21/2013
-  * fixed packaging error on broken version 0.2.1
+  * Paketierungsfehler behoben
 
 version 0.2.0 - 04/20/2013
-  * added event planer feature
-  * error handling and logging improvements
+  * Event Planer Funktion hinzugefügt
+  * Fehlerbehandlung und Logging verbessert
 
 version 0.1.1 - 04/19/2013
-  * fixed login issues
-  * error handling improvements
+  * Login Probleme behoben
+  * Verbesserung der Fehlerbehandlung
 
 version 0.1.0 - 04/18/2013
-  * initial release
+  * initiales Release

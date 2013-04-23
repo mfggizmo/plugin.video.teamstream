@@ -8,12 +8,6 @@ import simplejson as json
 import os.path
 import pickle
 import time
-
-if platform.system() == "Windows":
-	sys.modules['lxml'] = __import__('lxml_win')
-else platform.system() == "Linux":
-	sys.modules['lxml'] = __import__('lxml_linux')
-
 import lxml
 import lxml.html
 from lxml import etree
@@ -27,7 +21,7 @@ __email__      = "siriuz@gmx.net"
 ########################
 # constants definition #
 ########################
-PLUGINID = "plugin.video.teamstream-win32"
+PLUGINID = "plugin.video.teamstream"
 MODE_PLAY = "play"
 SHOW_CHANNEL= "channel"
 SHOW_EVENTPLAN = "eventplan"
