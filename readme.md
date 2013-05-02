@@ -1,4 +1,4 @@
-Teamstream.to Live-TV Addon für XBMC
+Teamstream Live-TV (Sky Stream) Addon für XBMC
 ====================================
 
 Kurzanleitung für die Benutzung des Teamstream.to XBMC plugin:
