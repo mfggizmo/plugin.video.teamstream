@@ -4,13 +4,11 @@ import cookielib, urllib, urllib2, HTMLParser
 from cookielib import CookieJar
 import datetime
 import xbmcgui, xbmcplugin, xbmcaddon
-import simplejson as json
 import os.path
 import pickle
 import time
-import lxml
-import lxml.html
-from lxml import etree
+from BeautifulSoup import BeautifulSoup
+
 
 
 __author__     = "siriuz"
@@ -123,8 +121,8 @@ def login():
 	log( "Logging in ...")
 	html = fetchHttp( URL_BASE )
 	
-	js_url = lxml.html.fromstring( html )
-	js_url = js_url.xpath("//script")[0].get("src")
+	js_url = BeautifulSoup( html)
+	js_url = js_url.find("script")['src']
 	js_url = URL_BASE + js_url
 	js = fetchHttp( js_url, hdrs = { "Referer": "http://www.teamstream.to/" })
 	m = re.search(".*\"(.*)\"\).*", js)
@@ -176,14 +174,14 @@ def login():
 		return False
 	else:
 		log( "Login ok")
-		return True
+		return True	
 
 def getChannels():
-	xml = etree.parse( STREAMS_FILE )
+	xml = BeautifulSoup( open(STREAMS_FILE,"r").read())
 	channels = []
-	for channel in xml.xpath("//channel"):
-		chan = {	"name": channel.get("name"),
-					"image": channel.get("image") }
+	for channel in xml.findAll("channel"):
+		chan = {	"name": channel["name"],
+					"image": channel["image"] }
 		channels.append( chan )
 		
 	return channels
@@ -191,14 +189,14 @@ def getChannels():
 		
 def getChannelItems(chan):
 	items = []
-	xml = etree.parse( STREAMS_FILE )
-	for channel in xml.xpath("//channel"):
-		if channel.get("name") == chan:
-			for item in channel.xpath("item"):
-				items.append( { "title": item.xpath("title")[0].text,
-								"epg": item.xpath("epg")[0].text,
-								"image": item.xpath("image")[0].text,
-								"playpath": item.xpath("file")[0].text } )
+	xml = BeautifulSoup( open(STREAMS_FILE,"r").read())
+	for channel in xml.findAll("channel"):
+		if channel["name"] == chan:
+			for item in channel.findAll("item"):
+				items.append( { "title": item.find("title").string,
+								"epg": item.find("epg").string,
+								"image": item.find("image").string,
+								"playpath": item.find("file").string } )
 			return items
 
 def getImage(image):
@@ -216,17 +214,16 @@ def getStreamparams(force=False):
 		if login():
 			url = URL_BASE + getLink()
 			html = fetchHttp(url, post=False)
-			html = lxml.html.fromstring( html )
+			html = BeautifulSoup(html)
 			
-			streamcontainer = html.xpath("//div[@id='streamcontainer']")[0]
-			flv = streamcontainer.xpath("embed")[0].get("src")
-			flashvars = streamcontainer.xpath("embed")[0].get("flashvars")
+			streamcontainer = html.find("div", id="streamcontainer")
+			flv = streamcontainer.find("embed")["src"]
+			flashvars =streamcontainer.find("embed")["flashvars"]
 			playlist = flashvars.split("file=")[1].split("&")[0]
 			xml = fetchHttp(playlist, hdrs= { "Referer": url },  post=False)
-			xml = etree.fromstring( xml )
-			namespace = { "jwplayer":"http://developer.longtailvideo.com/" }
-			rtmp = xml.xpath("//rss/channel/item/jwplayer:streamer", namespaces=namespace)[0].text
-			
+			xml = BeautifulSoup(xml)
+			rtmp = xml.find("jwplayer:streamer").string
+
 			params = {	"flv": flv,
 						"rtmp": rtmp,
 						"pageurl": url }
@@ -243,83 +240,74 @@ def getLink(url=""):
 		url = URL_BASE + "forum.php"
 		flag = True
 	
-	html = fetchHttp(url, post=False)
-	html = lxml.html.fromstring(html)
-	for link in html.xpath("//a"):
+	html = fetchHttp( url, post=False)
+	html = BeautifulSoup( html)
+	for link in html.findAll("a"):
 		cmp = link.text
 		if cmp == "TS Stream Box (SD+HD)":
-			href=link.get("href")
+			href=link["href"]
 			if "newpost" not in href:
 				if flag:
 					return getLink(URL_BASE + href)
 				else:
 					return href
 
-def getEPG(channel, html):
+def getChannelListEPG():
+	channel_list = []
 	stime = (int(time.strftime("%H")) * 60) + (int(time.strftime("%M")))
-	try:
-		html = lxml.html.fromstring( html )
-		elements = html.xpath("//*[@id='program-list']/div/div/div/div/ul/li")
-		for element in elements:
-			cmp = element.xpath("div[@class='channel']")[0].text
-			if channel == cmp.strip():
-				current_show = element.xpath("ul/li[1]/div/a[1]/b")
-				if len(current_show) != 0:
-					current_show = current_show[0].text
-				else:
-					current_show = element.xpath("ul/li[1]/div/div[1]/b")[0].text
-				category = element.xpath("ul/li[1]/div/a[3]/span")
-				if len(category) != 0:
-					category = category[0].text
-				else:
-					category = element.xpath("ul/li[1]/div/span[3]")
-					if len(category) != 0:
-						category = category[0].text
-					else:
-						category = ""
-				etime = element.xpath("ul/li[2]/div/a[2]/span")
-				if len(etime) != 0:
-					etime = etime[0].text
-				else:
-					etime = element.xpath("ul/li[2]/div/span")[0].text
-				category = re.sub(r'\s\b[A-Z]{3}.*', '', category).strip()
-				hours = int(etime.split(":")[0])
-				minutes = int(etime.split(":")[1])
-				etime = hours*60 + minutes
-				if etime > stime:
-					remaining = etime - stime
-				else:
-					remaining = (etime + 24*60) - stime
-				if category != "":
-					the_string = "{0} (noch {1}' | {2})".format(current_show.encode("utf-8"), str(remaining), category.encode("utf-8"))
-				else:
-					the_string = "{0} (noch {1}')".format(current_show.encode("utf-8"), str(remaining))
-				the_string = the_string.decode("utf-8")
-				return the_string
-	except:
-		return ""
+	html = urllib2.urlopen("http://www.hoerzu.de/tv-programm/jetzt/")
+	soup = BeautifulSoup(html)
+	divs = soup.findAll("div", {"class":"block"})
+	for div in divs:
+		channels = div.findAll("ul", {"class":"tvshows"})
+		for channel in channels:
+			channel_name = channel.parent.findAll("div", {"class":"channel"})[0].string
+			current_show =  channel.find("b", {"class":"title"}).string
+			etime = channel.findAll("span", {"class":"starttime"})[1].string
+			category = channel.find("span", {"class":"year-country"}).string
+			category = re.sub(r'\s\b[A-Z]{3}.*', '', category).strip()
+			hours = int(etime.split(":")[0])
+			minutes = int(etime.split(":")[1])
+			etime = hours*60 + minutes
+			remaining = etime - stime
+			if category != "":
+				the_string = "{0} (noch {1}' | {2})".format(current_show.encode("utf-8"), str(remaining), category.encode("utf-8"))
+			else:
+				the_string = "{0} (noch {1}')".format(current_show.encode("utf-8"), str(remaining))
+			the_string = the_string.decode("utf-8")
+			channel_list.append({	"name":channel_name,
+									"info":the_string})
+	return channel_list
+	
+def getEPG(channel_name,channel_list):
+	retval = ""
+	for channel in channel_list:
+		if channel_name == channel["name"]:
+			retval = channel["info"]
+	return retval
 		
 def getEventsPerDay(day, html):
-	xpath = "//div[@id='tab-%s']/table" % day
-	table = html.xpath(xpath)
-	if len(table) != 0:
-		return getEventRows(table[0])
+	html = BeautifulSoup( html)
+	div_id = "tab-%s" % day
+	table = html.find("div", id=div_id)
+	if table is not None:
+		return getEventRows(table)
 	else:
 		return False
 	
 def getEventRows(table):
 	ret_rows = []
-	for row in table.xpath("tr"):
-		name = lxml.html.tostring(row.xpath("td[3]")[0])
-		m = re.search('<td style="width:295px">(.*)<br>(.*)</td>', name)
+	for row in table.findAll("tr"):
+		name = str(row.findAll("td")[2])
+		m = re.search('<td style="width:295px">(.*)<br />(.*)</td>', name)
 		name = m.group(1) + ": " + m.group(2)
-		url = URL_BASE + "plan/" + row.xpath("td[1]/img")[0].get("src")
+		url = URL_BASE + "plan/" + row.find("img")["src"]
 		img = url.split("pics/")[1]
 		downloadImage( url, img)
 		ret_rows.append({ "img": img,
-					"start_time": row.xpath("td[2]")[0].text,
+					"start_time": row.findAll("td")[1].string,
 					"name": name,
-					"station_id": row.xpath("td[4]")[0].text })
+					"station_id": row.findAll("td")[3].string })
 		
 	return ret_rows
 	
@@ -350,9 +338,11 @@ def getEventPlan():
 			html = open(EVENTPLAN_CACHE, 'r').read()
 			return html
 		else:
+			pass
 			log( "Eventplaner Cache ist zu alt, erneuere ihn ...")
 	
 	else:
+		pass
 		log( "Eventplaner Cache nicht gefunden, erstelle ihn ...")
 	
 	if login():
@@ -363,13 +353,15 @@ def getEventPlan():
 		return html
 		
 def getPlayPath(station_id):
-	xml = etree.parse( STREAMS_FILE )
-	for item in xml.xpath("//item"):
-		event_id = item.get("event_id")
-		if event_id is not None and event_id == station_id:
-			return item.xpath("file")[0].text
-	
-	return False
+	retval = False
+	xml = BeautifulSoup( open(STREAMS_FILE,"r").read())
+	for item in xml.findAll("item"):
+		try:
+			if item["event_id"]  == station_id:
+				retval = item.find("file").string
+		except:
+			pass
+	return retval
 	
 ###################
 # Directory Stuff #
@@ -388,14 +380,12 @@ def showMain():
 def showChannel(channel):
 
 	channel = channel.replace("+", " ")
-	req = urllib2.Request( EPG_URL )
-	html = urllib2.urlopen(req).read()
-		
+	channel_list = getChannelListEPG()
 	
 	for item in getChannelItems(channel):
 		name = item["title"]
 		if item['epg'] is not 	None:
-			epg = getEPG( item['epg'], html )
+			epg = getEPG( item['epg'], channel_list)
 			if epg != "":
 				title = name + " - " + epg
 			else:
@@ -429,7 +419,7 @@ def showEventDay(day):
 	except:
 		log( html)
 
-	html = lxml.html.fromstring( html )
+	html = getEventPlan()
 	events = getEventsPerDay(day, html)
 	if events:
 		for event in events:
