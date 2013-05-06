@@ -271,7 +271,10 @@ def getChannelListEPG():
 				hours = int(etime.split(":")[0])
 				minutes = int(etime.split(":")[1])
 				etime = hours*60 + minutes
-				remaining = etime - stime
+				if etime > stime:
+					remaining = etime - stime
+				else:
+					remaining = (etime + 24*60) - stime
 				if category != "":
 					the_string = "{0} (noch {1}' | {2})".format(current_show.encode("utf-8"), str(remaining), category.encode("utf-8"))
 				else:
