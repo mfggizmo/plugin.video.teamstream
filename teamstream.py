@@ -261,20 +261,25 @@ def getChannelListEPG():
 	for div in divs:
 		channels = div.findAll("ul", {"class":"tvshows"})
 		for channel in channels:
-			channel_name = channel.parent.findAll("div", {"class":"channel"})[0].string
-			current_show =  channel.find("b", {"class":"title"}).string
-			etime = channel.findAll("span", {"class":"starttime"})[1].string
-			category = channel.find("span", {"class":"year-country"}).string
-			category = re.sub(r'\s\b[A-Z]{3}.*', '', category).strip()
-			hours = int(etime.split(":")[0])
-			minutes = int(etime.split(":")[1])
-			etime = hours*60 + minutes
-			remaining = etime - stime
-			if category != "":
-				the_string = "{0} (noch {1}' | {2})".format(current_show.encode("utf-8"), str(remaining), category.encode("utf-8"))
-			else:
-				the_string = "{0} (noch {1}')".format(current_show.encode("utf-8"), str(remaining))
-			the_string = the_string.decode("utf-8")
+			try:
+				log("Scanning Channel")
+				channel_name = channel.parent.findAll("div", {"class":"channel"})[0].string
+				current_show =  channel.find("b", {"class":"title"}).string
+				etime = channel.findAll("span", {"class":"starttime"})[1].string
+				category = channel.find("span", {"class":"year-country"}).string
+				category = re.sub(r'\s\b[A-Z]{3}.*', '', category).strip()
+				hours = int(etime.split(":")[0])
+				minutes = int(etime.split(":")[1])
+				etime = hours*60 + minutes
+				remaining = etime - stime
+				if category != "":
+					the_string = "{0} (noch {1}' | {2})".format(current_show.encode("utf-8"), str(remaining), category.encode("utf-8"))
+				else:
+					the_string = "{0} (noch {1}')".format(current_show.encode("utf-8"), str(remaining))
+				the_string = the_string.decode("utf-8")
+			except:
+				the_string = ""
+				
 			channel_list.append({	"name":channel_name,
 									"info":the_string})
 	return channel_list
