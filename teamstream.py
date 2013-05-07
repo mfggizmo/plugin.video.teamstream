@@ -9,8 +9,6 @@ import pickle
 import time
 from BeautifulSoup import BeautifulSoup
 
-
-
 __author__     = "siriuz"
 __copyright__  = "Copyright 2013, teamstream.to"
 __maintainer__ = "siriuz"
@@ -20,21 +18,6 @@ __email__      = "siriuz@gmx.net"
 # constants definition #
 ########################
 PLUGINID = "plugin.video.teamstream"
-MODE_PLAY = "play"
-SHOW_CHANNEL= "channel"
-SHOW_EVENTPLAN = "eventplan"
-SHOW_EVENTDAY = "eventday"
-PARAMETER_KEY_MODE = "mode"
-PARAMETER_KEY_PLAYPATH = "playpath"
-PARAMETER_KEY_STATION = "station"
-PARAMETER_KEY_CID = "cid"
-PARAMETER_KEY_CID2 = "cid2"
-PARAMETER_KEY_TITLE = "title"
-PARAMETER_KEY_CHANNEL = "channel"
-PARAMETER_KEY_NAME = "name"
-PARAMETER_KEY_IMAGE = "image"
-PARAMETER_KEY_DAY = "day"
-
 URL_BASE = "http://www.teamstream.to/"
 EPG_URL = "http://www.hoerzu.de/tv-programm/jetzt/"
 STREAM_CACHE = xbmc.translatePath( "special://home/addons/" + PLUGINID + "/resources/cache/stream.cache")
@@ -379,14 +362,14 @@ def showMain():
 	for channel in getChannels():
 		chan = channel["name"]
 		img = getImage( channel["image"] )
-		addDirectoryItem( chan, {PARAMETER_KEY_MODE: SHOW_CHANNEL, PARAMETER_KEY_CHANNEL: chan }, img, folder=True)
+		addDirectoryItem( chan, {"mode": "channel", "title": chan }, img, folder=True)
 	
-	addDirectoryItem("Eventplan", {PARAMETER_KEY_MODE: SHOW_EVENTPLAN}, image = getImage("eventplanner.png"), folder=True)
+	addDirectoryItem("Eventplan", {"mode": "eventplan"}, image = getImage("eventplanner.png"), folder=True)
 	xbmcplugin.endOfDirectory( handle=pluginhandle, succeeded=True)
 	
 
 def showChannel(channel):
-
+	log ( "Entering showChannel(): " + channel)
 	channel = channel.replace("+", " ")
 	if settings.getSetting( id="epg") == "true":
 		channel_list = getChannelListEPG()
@@ -405,7 +388,7 @@ def showChannel(channel):
 		playpath = item["playpath"]
 		img = getImage ( item["image"])
 			
-		addDirectoryItem( title, { PARAMETER_KEY_IMAGE: item["image"], PARAMETER_KEY_NAME: name, PARAMETER_KEY_PLAYPATH: playpath, PARAMETER_KEY_MODE: MODE_PLAY, PARAMETER_KEY_TITLE: title }, img)
+		addDirectoryItem( title, { "image": item["image"], "name": name, "playpath": playpath, "mode": "play", "title": title }, img)
 
 	xbmcplugin.endOfDirectory( handle=pluginhandle, succeeded=True)
 def showEventplan():
@@ -415,7 +398,7 @@ def showEventplan():
 		offset = (datetime.datetime.today() + datetime.timedelta(days=i)).weekday()
 		img = getImage( days[offset] + ".png")
 		label = days[offset]
-		addDirectoryItem(label, {PARAMETER_KEY_MODE: SHOW_EVENTDAY, PARAMETER_KEY_DAY: str(offset+1)}, image=img, folder=True)
+		addDirectoryItem(label, {"mode": "eventday", "day": str(offset+1)}, image=img, folder=True)
 		
 	xbmcplugin.endOfDirectory( handle=pluginhandle, succeeded=True)
 	
@@ -437,7 +420,7 @@ def showEventDay(day):
 			playpath = getPlayPath( event["station_id"] )
 			
 			if playpath:			
-				addDirectoryItem( title, { PARAMETER_KEY_IMAGE:  event["img"], PARAMETER_KEY_NAME: name, PARAMETER_KEY_PLAYPATH: playpath, PARAMETER_KEY_MODE: MODE_PLAY, PARAMETER_KEY_TITLE: title }, img)
+				addDirectoryItem( title, { "image":  event["img"], "name": name, "playpath": playpath, "mode": "play", "title": title }, img)
 			else:
 				log( "Dieser Kanel kann noch nicht abgespielt werden: " + event["station_id"])
 				img = IMG_PATH + "error.png"
@@ -469,32 +452,33 @@ def addDirectoryItem( name, params={}, image="", total=0, folder=False):
 # xbmc entry point #
 ####################
 params = parameters_string_to_dict(sys.argv[2])
-mode = params.get(PARAMETER_KEY_MODE, "0")
+mode = params.get("mode", "0")
 
 # depending on the mode, call the appropriate function to build the UI.
 if not sys.argv[2]:
 	# new start
 	ok = showMain()
 
-elif mode == SHOW_CHANNEL:
-	channel = params[PARAMETER_KEY_CHANNEL]
+elif mode == "channel":
+	log( "Mode: Channel")
+	channel = params["title"]
 	showChannel(channel)
 	
-elif mode == SHOW_EVENTPLAN:
+elif mode == "eventplan":
 	showEventplan()
 	
-elif mode == SHOW_EVENTDAY:
-	day = params[PARAMETER_KEY_DAY]
+elif mode == "eventday":
+	day = params["day"]
 	log( "Calling day: " + day)
 	showEventDay(day)
 
-elif mode == MODE_PLAY:
+elif mode == "play":
 	stream_params = getStreamparams()
-	playpath = params[PARAMETER_KEY_PLAYPATH]
+	playpath = params["playpath"]
 	url = "%s swfUrl=%s pageUrl=%s playpath=%s swfVfy=true live=true" % (stream_params["rtmp"], stream_params["flv"], stream_params["pageurl"], playpath)
-	name = params[PARAMETER_KEY_TITLE].replace("+"," ")
+	name = params["title"].replace("+"," ")
 	
-	img = getImage( params[PARAMETER_KEY_IMAGE] )
+	img = getImage( params["image"] )
 	
 	li = xbmcgui.ListItem( name, iconImage=img, thumbnailImage=img)
 	li.setProperty( "IsPlayable", "true")
