@@ -7,7 +7,7 @@ version 0.4.0 - 05/12/2013
 
 version 0.3.0 - 04/23/2013
   * Plugin nun Platform-Neutral, da lxml binary Paket entfernt
-  * Abh�ngigkeiten m�ssen nun manuell installiert werden (siehe Wiki)
+  * Abhaengigkeiten muessen nun manuell installiert werden (siehe Wiki)
 
 version 0.2.1 - 04/21/2013
   * Paketierungsfehler behoben
