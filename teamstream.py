@@ -193,27 +193,41 @@ def getImage(image):
 def getStreamparams(force=False):
 	if os.path.exists(STREAM_CACHE) and not force:
 		params = pickle.load( open(STREAM_CACHE, 'r') )
-		return params
+		if params is not None:
+			return params
+		else:
+			return False
 	else:
 		if login():
 			url = URL_BASE + getLink()
-			html = fetchHttp(url, post=False)
-			html = BeautifulSoup(html)
 			
-			streamcontainer = html.find("div", id="streamcontainer")
-			flv = streamcontainer.find("embed")["src"]
-			flashvars =streamcontainer.find("embed")["flashvars"]
-			playlist = flashvars.split("file=")[1].split("&")[0]
-			xml = fetchHttp(playlist, hdrs= { "Referer": url },  post=False)
-			xml = BeautifulSoup(xml)
-			rtmp = xml.find("jwplayer:streamer").string
+			for i in range(1, 11, 1): 
+				html = fetchHttp(url, post=False)
+				html = BeautifulSoup(html)
+				streamcontainer = html.find("div", id="streamcontainer")
+				if streamcontainer is not None:
+					log("Streamcontainer gefunden mit Versuch #%s" % i)
+					break
+				else:
+					log("Streamcontainer nicht gefunden (Versuch %s/10)" % i)
+					
+			if streamcontainer is None:
+				notify("Streamcontainer konnte nicht gefunden werden!")
+				return false
+			else:		
+				flv = streamcontainer.find("embed")["src"]
+				flashvars =streamcontainer.find("embed")["flashvars"]
+				playlist = flashvars.split("file=")[1].split("&")[0]
+				xml = fetchHttp(playlist, hdrs= { "Referer": url },  post=False)
+				xml = BeautifulSoup(xml)
+				rtmp = xml.find("jwplayer:streamer").string
 
-			params = {	"flv": flv,
-						"rtmp": rtmp,
-						"pageurl": url }
-			
-			pickle.dump( params, open(STREAM_CACHE, 'w') )				
-			return params
+				params = {	"flv": flv,
+							"rtmp": rtmp,
+							"pageurl": url }
+				
+				pickle.dump( params, open(STREAM_CACHE, 'w') )					
+				return params
 		else:
 			return False
 
@@ -476,20 +490,21 @@ elif mode == "eventday":
 
 elif mode == "play":
 	stream_params = getStreamparams()
-	playpath = params["playpath"]
-	url = "%s swfUrl=%s pageUrl=%s playpath=%s swfVfy=true live=true" % (stream_params["rtmp"], stream_params["flv"], stream_params["pageurl"], playpath)
-	name = params["title"].replace("+"," ")
-	
-	img = getImage( params["image"] )
-	
-	li = xbmcgui.ListItem( name, iconImage=img, thumbnailImage=img)
-	li.setProperty( "IsPlayable", "true")
-	li.setProperty( "Video", "true")
-	
-	xbmc.Player().play(url, li)
-	xbmc.sleep(1000)
-	if not xbmc.Player().isPlaying():
-		notify("Stream Fehler", "Cache wird erneuert ...")
-		stream_params = getStreamparams(force=True)
+	if stream_params is not False:
+		playpath = params["playpath"]
 		url = "%s swfUrl=%s pageUrl=%s playpath=%s swfVfy=true live=true" % (stream_params["rtmp"], stream_params["flv"], stream_params["pageurl"], playpath)
+		name = params["title"].replace("+"," ")
+		
+		img = getImage( params["image"] )
+		
+		li = xbmcgui.ListItem( name, iconImage=img, thumbnailImage=img)
+		li.setProperty( "IsPlayable", "true")
+		li.setProperty( "Video", "true")
+		
 		xbmc.Player().play(url, li)
+		xbmc.sleep(1000)
+		if not xbmc.Player().isPlaying():
+			notify("Stream Fehler", "Cache wird erneuert ...")
+			stream_params = getStreamparams(force=True)
+			url = "%s swfUrl=%s pageUrl=%s playpath=%s swfVfy=true live=true" % (stream_params["rtmp"], stream_params["flv"], stream_params["pageurl"], playpath)
+			xbmc.Player().play(url, li)
