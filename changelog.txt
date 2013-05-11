@@ -1,5 +1,5 @@
 version 0.4.0 - 05/12/2013
-  * lxml Abhaengigkeit komplett entfernt:
+  * lxml komplett ersetzt durch BeautifulSoup:
     - dadurch vorallem auf RPi leider deutlich langsamer
     - dafür auf allen Platformen lauffaehig
   * EPG laesst sich nun ueber die Settings deaktivieren
