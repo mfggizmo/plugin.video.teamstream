@@ -18,6 +18,7 @@ __email__      = "siriuz@gmx.net"
 # constants definition #
 ########################
 PLUGINID = "plugin.video.teamstream"
+VERSION = "0.4.0"
 URL_BASE = "http://www.teamstream.to/"
 EPG_URL = "http://www.hoerzu.de/tv-programm/jetzt/"
 STREAM_CACHE = xbmc.translatePath( "special://home/addons/" + PLUGINID + "/resources/cache/stream.cache")
@@ -457,6 +458,7 @@ mode = params.get("mode", "0")
 # depending on the mode, call the appropriate function to build the UI.
 if not sys.argv[2]:
 	# new start
+	log( "v"+VERSION)
 	ok = showMain()
 
 elif mode == "channel":
