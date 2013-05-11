@@ -5,7 +5,7 @@ from cookielib import CookieJar
 import datetime
 import xbmcgui, xbmcplugin, xbmcaddon
 import os.path
-import pickle
+import cPickle as pickle
 import time
 from BeautifulSoup import BeautifulSoup
 
