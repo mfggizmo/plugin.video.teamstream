@@ -1,12 +1,19 @@
+version 0.4.0 - 05/12/2013
+  * lxml Abhaengigkeit komplett entfernt:
+    - dadurch vorallem auf RPi leider deutlich langsamer
+    - dafÃ¼r auf allen Platformen lauffaehig
+  * EPG laesst sich nun ueber die Settings deaktivieren
+    - wird fuer den RPi empfohlen
+
 version 0.3.0 - 04/23/2013
   * Plugin nun Platform-Neutral, da lxml binary Paket entfernt
-  * Abhängigkeiten müssen nun manuell installiert werden (siehe Wiki)
+  * Abhï¿½ngigkeiten mï¿½ssen nun manuell installiert werden (siehe Wiki)
 
 version 0.2.1 - 04/21/2013
   * Paketierungsfehler behoben
 
 version 0.2.0 - 04/20/2013
-  * Event Planer Funktion hinzugefügt
+  * Event Planer Funktion hinzugefuegt
   * Fehlerbehandlung und Logging verbessert
 
 version 0.1.1 - 04/19/2013
