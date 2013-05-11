@@ -297,14 +297,14 @@
 			<image>orf_2.png</image>
 		</item>
 		<item>
-			<title>SF 1</title>
-			<epg></epg>
+			<title>SRF 1</title>
+			<epg>SRF 1</epg>
 			<file>srf1</file>
 			<image>sf_1.png</image>
 		</item>
 		<item event_id="SF 2">
-			<title>SF 2</title>
-			<epg></epg>
+			<title>SRF 2</title>
+			<epg>SRF 2</epg>
 			<file>srf2</file>
 			<image>sf_2.png</image>
 		</item>
