@@ -115,8 +115,8 @@ def login():
 	hsh1 = m.group(1) + m.group(2)
 	sitechrx = hsh1 + hsh2
 	
-	login = settings.getSetting( id="login")
-	password = settings.getSetting( id="password")
+	login = settings.getSetting( id="mfggizmo")
+	password = settings.getSetting( id="ratemal123")
 	
 	if (login == "" or password == ""):
 		error = "Username und/oder Passwort nicht gesetzt"
